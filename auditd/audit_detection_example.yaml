@@ -1,0 +1,37 @@
+title: Audit Detection Example
+id: ca46274d-5f0b-41a7-abc9-f27785b866a7
+status: test
+description: Detects "cpulimit" command execution with "-l" and "-f" options enabled, cpulimit is a simple program which attempts to limit the cpu usage of a process, malicious adversaries can use this with "sudo" in order to get a root shell for privilege escalation
+references:
+    - https://gtfobins.github.io/gtfobins/cpulimit/
+author: 
+    - Mr_Architekt ("@architect.exe" on Medium)
+    - Mane Reyes ("thepurpleoni" on GitHub, "_purpleOni" on Youtube and "_thepurpleoni" on Instagram)
+date: 2024/03/16
+tags:
+    - attack.T1548.003
+    - attack.privilege_escalation
+    - attack.defense_evasion
+logsource:
+    category: command execution
+    product: linux
+    service: auditd
+    definition: rule "-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/cpulimit -F key=cpulimit_exec" or rule "-a always,exit -F arch=b64 -S execve -F key=comm_exe" rule must be set on auditd
+detection:
+    selection:
+        type: 'EXECVE'
+        a0|contains:
+            - 'sudo'
+        a1|contains:
+            - 'cpulimit'
+        a2|contains:
+            - '-l'
+        a4|contains:
+            - '-f'
+        a5|contains:
+            - '/bin/sh'
+            - '/bin/shell'
+    condition: selection
+falsepositives:
+    - Legitimate cpulimit usage by administrators
+level: high
