@@ -1,0 +1,32 @@
+title: Audit Env Privesc
+id: 6fcc3264-4288-4a46-802d-08dbe4191fe7
+status: test
+description: Detects the execution of "env" command with a bin/sh attempt to generate a shell with sudo permissions
+references:
+    - https://gtfobins.github.io/gtfobins/env/
+author: 
+    - Mr_Architekt ("@architect.exe" on Medium)
+    - Mane Reyes ("thepurpleoni" on GitHub, "_purpleOni" on Youtube and "_thepurpleoni" on Instagram)
+date: 2024/07/16
+tags:
+    - attack.T1548.003
+    - attack.privilege_escalation
+    - attack.defense_evasion 
+logsource:
+    category: command execution
+    product: linux
+    service: audit
+    definition: rule "-a always,exit -F arch=b64 -S execve -F exe=/usr/bin/env -F key=env_exec" or rule "-a always,exit -F arch=b64 -S execve -F key=comm_exe" rule must be set on auditd
+detection:
+    selection:
+        type: 'EXECVE'
+        a0|contains: 
+            - 'sudo'
+        a1|contains: 
+            - 'env'
+        a2|contains: 
+            - '/bin/sh'
+    condition: selection
+falsepositives:
+    - Legitimate use of "env" command
+level: critical

@@ -1,0 +1,30 @@
+title: Audit Gcc Privesc
+id: 5f7cd5a0-c733-431a-925b-6742d268e7bd
+status: test
+description: Detects the malicious activity of privilege escalation with gcc binary
+references:
+    - https://gtfobins.github.io/gtfobins/gcc/
+author: 
+date: 2024/07/17
+tags:
+    - attack.T1548.003
+    - attack.privilege_escalation
+    - attack.defense_evasion 
+logsource:
+    category: command_execution
+    product: linux
+    service: auditd
+detection:
+    selection:
+        a0|contains:
+            - 'sudo'
+        a1|contains:
+            - 'gcc'
+        a2|contains:
+            - '-wrapper'
+        a3|contains:
+            - '/bin/sh'
+    condition: selection
+falsepositives:
+    - Legit use of command
+level: critical

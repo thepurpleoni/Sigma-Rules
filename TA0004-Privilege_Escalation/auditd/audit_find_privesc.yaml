@@ -1,0 +1,33 @@
+title: Audit Find Privesc
+id: ebe164ca-99d2-401a-ae2a-327d1d827b7a
+status: experimental
+description: Detects the execution of "find" command with the execute option being capable of running a /bin/sh shell
+references:
+    - https://gtfobins.github.io/gtfobins/find/
+author: 
+    - Mr_Architekt ("@architect.exe" on Medium)
+    - Mane Reyes ("thepurpleoni" on GitHub, "_purpleOni" on Youtube and "_thepurpleoni" on Instagram)
+date: 2024/07/16
+tags:
+    - attack.T1548.003
+    - attack.privilege_escalation
+    - attack.defense_evasion 
+logsource:
+    category: command execution
+    product: linux
+    service: auditd
+detection:
+    selection:
+        type: 'EXECVE'
+        a0|contains:
+            - 'sudo'
+        a1|contains:
+            - 'find'
+        a3|contains:
+            - '-exec'
+        a4|contains:
+            - '/bin/sh'
+    condition: selection
+falsepositives:
+    - Legitimate use of command
+level: critical

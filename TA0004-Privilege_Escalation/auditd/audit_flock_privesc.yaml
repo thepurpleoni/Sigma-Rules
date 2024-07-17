@@ -1,0 +1,30 @@
+title: Audit Flock Privesc
+id: 303ea6d0-82c2-4d8d-abec-6f1032d53725
+status: test
+description: Detects the execution of "flock" command with "-u" option, which allows to execute a shell and perform a privilege escalation with sudo permissions
+references:
+    - https://gtfobins.github.io/gtfobins/flock/
+author: 
+date: 2024/07/17
+tags:
+    - attack.T1548.003
+    - attack.privilege_escalation
+    - attack.defense_evasion 
+logsource:
+    category: command_execution
+    product: linux
+    service: auditd
+detection:
+    selection:
+        a0|contains:
+            - 'sudo'
+        a1|contains:
+            - 'flock'
+        a2|contains:
+            - '-u'
+        a4|contains:
+            - '/bin/sh'
+    condition: selection
+falsepositives:
+    - Legit use of command
+level: critical

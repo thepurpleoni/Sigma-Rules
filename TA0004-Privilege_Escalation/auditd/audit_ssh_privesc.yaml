@@ -1,0 +1,31 @@
+title: Audit Ssh Privesc
+id: 3410d895-fe9c-4d12-954c-97b9ad030f37
+status: test
+description: Detects 
+references:
+    - https://gtfobins.github.io/gtfobins/ssh/
+author: 
+date: 2024/07/17
+tags:
+    - attack.T1548.003
+    - attack.privilege_escalation
+    - attack.defense_evasion 
+logsource:
+    category: command_execution
+    product: linux
+    service: auditd
+detection:
+    selection:
+        a0|contains:
+            - 'sudo'
+        a1|contains:
+            - 'ssh'
+        a2|contains:
+            - '-o'
+        a3|contains:
+            - 'ProxyCommand'
+            - ';sh 0<&2 1>&2'
+    condition: selection
+falsepositives:
+    - Legit use of command
+level: critical

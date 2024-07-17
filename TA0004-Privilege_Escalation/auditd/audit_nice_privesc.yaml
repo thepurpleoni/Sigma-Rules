@@ -1,0 +1,28 @@
+title: Audit Nice Privesc
+id: 370b3fba-f873-4890-8459-fac7e4fcfbf4
+status: test
+description: Detects malicious activity of nice command to commit privilege escalation effectively
+references:
+    - https://gtfobins.github.io/gtfobins/nice/
+author: 
+date: 2024/07/17
+tags:
+    - attack.T1548.003
+    - attack.privilege_escalation
+    - attack.defense_evasion 
+logsource:
+    category: command_execution
+    product: linux
+    service: auditd
+detection:
+    selection:
+        a0|contains:
+            - 'sudo'
+        a1|contains:
+            - 'nice'
+        a2|contains:
+            - '/bin/sh'
+    condition: selection
+falsepositives:
+    - Legit use of command
+level: critical
