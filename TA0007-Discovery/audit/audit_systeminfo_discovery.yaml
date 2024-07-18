@@ -1,0 +1,38 @@
+title: Audit Systeminfo Discovery
+id: 276c82ea-64d9-4418-9229-72720a5fca2a
+status: test
+description: Detects 
+references:
+    - https://attack.mitre.org/techniques/T1082/
+    - 
+author: 
+date: 2024/07/18
+tags:
+    - attack.T1082
+    - attack.discovery
+logsource:
+    category: command_execution
+    product: linux
+    service: audit
+detection:
+    commands:
+        a0|contains:
+            - 'cat'
+            - 'less'
+            - 'more'
+    selection_cpuinfo:
+        a1|contains:
+            - 'cpuinfo'
+    selection_profiles:
+        a1|contains:
+            - '/etc/profile'
+    selection_services:
+        a1|contains:
+            - '/etc/services'
+    selection_issue:
+        a1|contains:
+            - '/etc/issue'
+    condition: commands AND (1 of selection_*)
+falsepositives:
+    - Unknown
+level: critical
