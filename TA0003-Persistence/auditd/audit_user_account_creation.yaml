@@ -1,0 +1,25 @@
+title: Audit User Account Creation
+id: 840653e0-03b7-4240-91a2-f7660d6e7e48
+status: test
+description: Detects the creation of new users by default commands on linux
+references:
+    - https://attack.mitre.org/techniques/T1136/001/
+author: 
+date: 2024/07/19
+tags:
+    - attack.persistence
+    - attack.T1136.001
+logsource:
+    category: command_execution
+    product: linux
+    service: auditd
+detection:
+    selection:
+        type: 'EXECVE'
+        a0|contains:
+            - 'adduser'
+            - 'useradd'
+    condition: selection
+falsepositives:
+    - Legit use of command
+level: critical

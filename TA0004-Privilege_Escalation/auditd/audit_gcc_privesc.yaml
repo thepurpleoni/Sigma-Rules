@@ -16,6 +16,7 @@ logsource:
     service: auditd
 detection:
     selection:
+        type: 'EXECVE'
         a0|contains:
             - 'sudo'
         a1|contains:

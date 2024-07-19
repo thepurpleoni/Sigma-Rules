@@ -16,6 +16,7 @@ logsource:
     service: audit
 detection:
     commands:
+        type: 'EXECVE'
         a0|contains:
             - 'cat'
             - 'less'

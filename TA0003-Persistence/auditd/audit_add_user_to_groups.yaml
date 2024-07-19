@@ -1,0 +1,46 @@
+title: Audit Add User To Groups
+id: 0c602351-8e21-42f6-ba45-21fd01554584
+status: test
+description: Detects the user add to a group
+references:
+    - https://attack.mitre.org/techniques/T1136/001/
+author: 
+date: 2024/07/19
+tags:
+    - attack.persistence
+    - attack.T1136.001 
+logsource:
+    category: application
+    product: linux
+    service: auditd
+detection:
+    audit_type:
+        type: 'EXECVE'
+    selection_usermod:
+        a0|contains:
+            - 'usermod'
+        a1|contains:
+            - '-a'
+        a2|contains:
+            - '-G'
+    selection_gpasswd:
+        a0|contains:
+            - 'gpasswd'
+        a1|contains:
+            - '-a'
+            - 'add'
+    keywords:
+        - 'root'
+        - 'admin'
+        - 'wheel'
+        - 'staff'
+        - 'sudo'
+        - 'disk'
+        - 'video'
+        - 'shadow'
+        - 'lxc'
+        - 'lxd'
+    condition: audit_type AND (1 of selection_*) AND keywords
+falsepositives:
+    - Unknown
+level: critical

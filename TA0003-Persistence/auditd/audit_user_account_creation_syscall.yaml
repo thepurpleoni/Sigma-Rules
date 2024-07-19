@@ -1,0 +1,24 @@
+title: Audit User Account Creation Syscall
+id: b8b4ea81-16fa-4724-a488-7646c1873326
+status: test
+description: Detects the creation of a user with the existence of a syscall log with "ADD_USER" type
+references:
+    - https://attack.mitre.org/techniques/T1136/001/
+author: 
+date: 2024/07/19
+tags:
+    - attack.persistence
+    - attack.T1136.001 
+logsource:
+    category: application
+    product: linux
+    service: auditd
+detection:
+    selection:
+        type: 'ADD_USER'
+        exe|contains:
+            - '/useradd'
+    condition: selection
+falsepositives:
+    - Unknown
+level: critical
